@@ -5,7 +5,9 @@ local PostCmd = {}
 
 local vapi = vim.api
 
-PostCmd.buf = vapi.nvim_create_buf(true, true)
-vapi.nvim_buf_set_name(buf, "postcmd")
 
+PostCmd.setup = function()
+  PostCmd.buf = vapi.nvim_create_buf(true, true)
+  vapi.nvim_buf_set_name(buf, "postcmd")
+end
 
