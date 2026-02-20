@@ -75,7 +75,7 @@ postcmd.init_config()
 vapi.nvim_create_user_command("Postcmd",
   function(opts)
     print(opts.args)
-    if opts.args == "scratch" then
+    if opts.args == "s" then
       postcmd.toggle_scratch()
     else
       postcmd.toggle_floating_term()
@@ -84,7 +84,21 @@ vapi.nvim_create_user_command("Postcmd",
   {nargs = "?"}
 )
 
-postcmd.setup_keymaps = function()
+postcmd.with_keymaps = function()
+
+  postcmd.init_config()
+  vapi.nvim_create_user_command("Postcmd",
+    function(opts)
+      print(opts.args)
+      if opts.args == "s" then
+        postcmd.toggle_scratch()
+      else
+        postcmd.toggle_floating_term()
+      end
+    end,
+    {nargs = "?"}
+  )
+
   vim.keymap.set('n', '<leader>t', postcmd.toggle_floating_term(), { noremap = true, silent = true })
   vim.keymap.set('n', '<leader>bs', postcmd.toggle_scratch(), { noremap = true, silent = true })
 end
