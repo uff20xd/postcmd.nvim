@@ -99,8 +99,8 @@ postcmd.with_keymaps = function()
     {nargs = "?"}
   )
 
-  vim.keymap.set('n', '<leader>t', postcmd.toggle_floating_term(), { noremap = true, silent = true })
-  vim.keymap.set('n', '<leader>bs', postcmd.toggle_scratch(), { noremap = true, silent = true })
+  vim.keymap.set('n', '<leader>t', postcmd.toggle_floating_term, { noremap = true, silent = true })
+  vim.keymap.set('n', '<leader>bs', postcmd.toggle_scratch, { noremap = true, silent = true })
 end
 
 return postcmd
