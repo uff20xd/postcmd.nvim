@@ -84,8 +84,9 @@ vapi.nvim_create_user_command("Postcmd",
   {nargs = "?"}
 )
 
-postcmd.setup = function()
-  vim.keymap.set('n', '<leader>t', ':terminal <CR>', { noremap = true, silent = true })
+postcmd.setup_keymaps = function()
+  vim.keymap.set('n', '<leader>t', postcmd.toggle_floating_term(), { noremap = true, silent = true })
+  vim.keymap.set('n', '<leader>bs', postcmd.toggle_scratch(), { noremap = true, silent = true })
 end
 
 return postcmd
