@@ -73,15 +73,14 @@ end
 postcmd.init_config()
 
 vapi.nvim_create_user_command("Postcmd",
-  function(opts)
-    -- print(inputs.fargs[0])
+  function()
     postcmd.toggle_floating_term()
   end,
-  { nargs = "1"}
+  {}
 )
 
 vapi.nvim_create_user_command("PostcmdScratch",
-  function(opts)
+  function()
     print(opts.fargs[0])
     postcmd.toggle_scratch()
   end,
