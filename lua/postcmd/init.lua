@@ -62,30 +62,31 @@ postcmd.toggle_floating_term = function()
 end
 
 postcmd.toggle_scratch = function()
-  postcmd.scratch = postcmd.scratch or postcmd.create_buf_win_pair({name = "[Postcmd Scratch]"})
-  if not vapi.nvim_win_is_valid(postcmd.scratch.win) then
-    postcmd.term = postcmd.create_buf_win_pair({buf = postcmd.scratch.buf})
+  postcmd.term = postcmd.term or { buf = -1, win = -1 }
+  if not vapi.nvim_win_is_valid(postcmd.term.win) then
+    postcmd.term = postcmd.create_buf_win_pair({buf = postcmd.term.buf, name = "[Postcmd Scratch]"})
   else
-    vapi.nvim_win_hide(postcmd.scratch.win)
+    vapi.nvim_win_hide(postcmd.term.win)
   end
 end
 
 postcmd.init_config()
 
 vapi.nvim_create_user_command("Postcmd",
-  function()
-    postcmd.toggle_floating_term()
+  function(opts)
+    print(opts.args)
+    if opts.args == "scratch" then
+      postcmd.toggle_scratch()
+    else
+      postcmd.toggle_floating_term()
+    end
   end,
-  {}
+  {nargs = "?"}
 )
 
-vapi.nvim_create_user_command("PostcmdScratch",
-  function()
-    print(opts.fargs[0])
-    postcmd.toggle_scratch()
-  end,
-  {}
-)
+postcmd.setup = function()
+  vim.keymap.set('n', '<leader>t', ':terminal <CR>', { noremap = true, silent = true })
+end
 
 return postcmd
 
