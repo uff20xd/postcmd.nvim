@@ -62,11 +62,11 @@ postcmd.toggle_floating_term = function()
 end
 
 postcmd.toggle_scratch = function()
-  postcmd.term = postcmd.term or { buf = -1, win = -1 }
-  if not vapi.nvim_win_is_valid(postcmd.term.win) then
-    postcmd.term = postcmd.create_buf_win_pair({buf = postcmd.term.buf, name = "[Postcmd Scratch]"})
+  postcmd.scratch = postcmd.scratch or { buf = -1, win = -1 }
+  if not vapi.nvim_win_is_valid(postcmd.scratch.win) then
+    postcmd.scratch = postcmd.create_buf_win_pair({buf = postcmd.scratch.buf, name = "[Postcmd Scratch]"})
   else
-    vapi.nvim_win_hide(postcmd.term.win)
+    vapi.nvim_win_hide(postcmd.scratch.win)
   end
 end
 
