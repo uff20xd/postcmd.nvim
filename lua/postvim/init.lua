@@ -90,8 +90,10 @@ action_menu.init_menu_conf = function(opts)
   return menu_conf
 end
 
-action_menu.select_action = function(opts)
-
+action_menu.select_action = function(opts, buf)
+  local line = vim.api.nvim_win_get_cursor(0);
+  vapi.nvim_buf_delete(buf, {})
+  local _ = opts.actions[line[1]].action()
 end
 
 action_menu.create = function(opts)
@@ -100,9 +102,11 @@ action_menu.create = function(opts)
   local menu_buf = menu_pair.buf
   local menu_win = menu_pair.win
   for i, action in ipairs(conf.actions) do
-    vapi.nvim_buf_set_lines(menu_buf, 3, i, false, { (action.name .. ": " .. action.desc) })
+    vapi.nvim_buf_set_lines(menu_buf, i - 1, i, false, { (action.name .. ": " .. (action.desc or "//")) })
   end
   vim.bo[menu_buf].modifiable = false
+  vim.keymap.set("n", conf.select_key, function() action_menu.select_action(conf, menu_buf) end, {noremap = true, silent = true, buffer = menu_buf})
+  return {buf = menu_buf, win = menu_win}
 end
 
 postvim.action_menu = action_menu
@@ -142,7 +146,18 @@ postvim.setup = function(opts)
   opts.action_menu = opts.fterm or {}
   opts.action_menu.enable = opts.fterm.enable or true
   if action_menu then
-    local menu = action_menu.create()
+    local conf = {
+      actions = {
+        {name = "Enable  Treesitter", action = vim.treesitter.start, desc = "Enables Treesitter in the current buffer."},
+        {name = "Disable Treesitter", action = vim.treesitter.stop, desc = "Disables Treesitter in the current buffer."},
+      }
+    }
+    vim.keymap.set("n", "<leader>a", function()
+      local pair = action_menu.create(conf)
+
+      vim.keymap.set("n", "<leader>a", function() vapi.nvim_buf_delete(pair.buf, {}) end, {noremap = true, silent = true, buffer = pair.buf})
+    end, { noremap = true, silent = true})
+
   end
 end
 
